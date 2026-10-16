@@ -1,0 +1,175 @@
+```html
+<!DOCTYPE html>
+<html>
+<head>
+    <title>College Portal Login</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #eaf0f8;
+            text-align: center;
+            margin: 0;
+        }
+
+        .container {
+            background: white;
+            width: 320px;
+            margin: 100px auto;
+            padding: 25px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px #aaa;
+        }
+
+        input, select, button {
+            width: 90%;
+            padding: 10px;
+            margin: 10px 0;
+        }
+
+        button {
+            background: #174ea6;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background: #0d3575;
+        }
+
+        .dashboard {
+            display: none;
+            background: white;
+            margin: 80px auto;
+            padding: 30px;
+            width: 350px;
+            border-radius: 10px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container" id="loginPage">
+        <h2>College Portal</h2>
+
+        <input type="text" id="username"
+               placeholder="Enter Username">
+
+        <input type="password" id="password"
+               placeholder="Enter Password">
+
+        <select id="role">
+            <option value="student">Student</option>
+            <option value="admin">Admin</option>
+        </select>
+
+        <button onclick="login()">Login</button>
+        <p id="message"></p>
+    </div>
+
+    <div class="dashboard" id="adminDashboard">
+        <h2>Admin Dashboard</h2>
+        <p>Welcome, Admin!</p>
+        <p>Manage students and college records.</p>
+        <button onclick="logout()">Logout</button>
+    </div>
+
+    <div class="dashboard" id="studentDashboard">
+        <h2>Student Dashboard</h2>
+        <p>Welcome, Student!</p>
+        <p>View your profile and academic details.</p>
+        <button onclick="logout()">Logout</button>
+    </div>
+
+    <script>
+        // Store sample login details in Local Storage
+        if (!localStorage.getItem("users")) {
+            const users = [
+                {
+                    username: "admin",
+                    password: "admin123",
+                    role: "admin"
+                },
+                {
+                    username: "student",
+                    password: "stu123",
+                    role: "student"
+                }
+            ];
+
+            localStorage.setItem("users", JSON.stringify(users));
+        }
+
+        function login() {
+            const username =
+                document.getElementById("username").value;
+
+            const password =
+                document.getElementById("password").value;
+
+            const role =
+                document.getElementById("role").value;
+
+            const users = JSON.parse(
+                localStorage.getItem("users")
+            );
+
+            const user = users.find(function(u) {
+                return u.username === username &&
+                       u.password === password &&
+                       u.role === role;
+            });
+
+            if (user) {
+                localStorage.setItem(
+                    "loggedInUser",
+                    JSON.stringify(user)
+                );
+
+                showDashboard(user.role);
+            } else {
+                document.getElementById("message").innerText =
+                    "Invalid username, password, or role!";
+            }
+        }
+
+        function showDashboard(role) {
+            document.getElementById("loginPage").style.display =
+                "none";
+
+            document.getElementById("adminDashboard").style.display =
+                "none";
+
+            document.getElementById("studentDashboard").style.display =
+                "none";
+
+            if (role === "admin") {
+                document.getElementById("adminDashboard")
+                    .style.display = "block";
+            } else {
+                document.getElementById("studentDashboard")
+                    .style.display = "block";
+            }
+        }
+
+        function logout() {
+            localStorage.removeItem("loggedInUser");
+
+            document.getElementById("loginPage").style.display =
+                "block";
+
+            document.getElementById("adminDashboard").style.display =
+                "none";
+
+            document.getElementById("studentDashboard").style.display =
+                "none";
+
+            document.getElementById("username").value = "";
+            document.getElementById("password").value = "";
+            document.getElementById("message").innerText = "";
+        }
+    </script>
+
+</body>
+</html>
+```
